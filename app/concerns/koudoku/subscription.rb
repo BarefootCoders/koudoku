@@ -6,7 +6,7 @@ module Koudoku::Subscription
     # We don't store these one-time use tokens, but this is what Stripe provides
     # client-side after storing the credit card information.
     attr_accessor :credit_card_token
-    
+
     belongs_to :plan
 
     # update details.
@@ -14,7 +14,7 @@ module Koudoku::Subscription
     def processing!
 
       # if their package level has changed ..
-      if changing_plans? 
+      if changing_plans?
 
         prepare_for_plan_change
 
@@ -82,7 +82,7 @@ module Koudoku::Subscription
 
               # create a customer at that package level.
               customer = Stripe::Customer.create(customer_attributes)
-              
+
             rescue Stripe::CardError => card_error
               errors[:base] << card_error.message
               card_was_declined
@@ -90,8 +90,10 @@ module Koudoku::Subscription
             end
 
             # store the customer id.
-            self.stripe_id = customer.id
-            self.last_four = customer.cards.retrieve(customer.default_card).last4
+            if customer.present? and customer.respond_to?(:id) and customer.respond_to?(:active_card)
+              self.stripe_id = customer.id
+              self.last_four = customer.active_card.last4
+            end
 
             finalize_new_subscription!
             finalize_upgrade!
@@ -110,12 +112,12 @@ module Koudoku::Subscription
         end
 
         finalize_plan_change!
-        
+
       # if they're updating their credit card details.
       elsif self.credit_card_token.present?
-        
+
         prepare_for_card_update
-        
+
         # fetch the customer.
         customer = Stripe::Customer.retrieve(self.stripe_id)
         customer.card = self.credit_card_token
@@ -141,7 +143,7 @@ module Koudoku::Subscription
       else
         if Koudoku.free_trial?
           "Start Trial"
-        else 
+        else
           "Upgrade"
         end
       end
@@ -194,7 +196,7 @@ module Koudoku::Subscription
 
   def prepare_for_cancelation
   end
-  
+
   def prepare_for_card_update
   end
 
@@ -218,14 +220,14 @@ module Koudoku::Subscription
 
   def card_was_declined
   end
-  
+
   # stripe web-hook callbacks.
   def payment_succeeded(amount)
   end
-  
+
   def charge_failed
   end
-  
+
   def charge_disputed
   end
 
