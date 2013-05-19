@@ -43,7 +43,7 @@ module Koudoku
 
       # Load all plans.
       @plans = ::Plan.order(:display_order).all
-      
+
       # Don't prep a subscription unless a user is authenticated.
       unless no_owner?
         # we should also set the owner of the subscription here.
@@ -65,7 +65,7 @@ module Koudoku
           else
             redirect_to_sign_up
           end
-          
+
         else
           raise "This feature depends on Devise for authentication."
         end
@@ -110,7 +110,7 @@ module Koudoku
     def update
       if @subscription.update_attributes(subscription_params)
         flash[:notice] = "You've successfully updated your subscription."
-        redirect_to owner_subscription_path(@owner, @subscription)
+        redirect_to cookies[:pre_authentication_url] || owner_subscription_path(@owner, @subscription)
       else
         flash[:error] = 'There was a problem processing this transaction.'
         render :edit

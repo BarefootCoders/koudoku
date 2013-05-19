@@ -7,9 +7,9 @@ require "koudoku/version"
 Gem::Specification.new do |s|
   s.name        = "koudoku"
   s.version     = Koudoku::VERSION
-  s.authors     = ["Andrew Culver"]
-  s.email       = ["andrew.culver@gmail.com"]
-  s.homepage    = "http://github.com/andrewculver/koudoku"
+  s.authors     = ["Andrew Culver", "Jason Berlinsky"]
+  s.email       = ["andrew.culver@gmail.com", "jason@barefootcoders.com"]
+  s.homepage    = "http://github.com/BarefootCoders/koudoku"
   s.summary     = %q{Robust subscription support for Rails with Stripe.}
   s.description = %q{Robust subscription support for Rails with Stripe. Provides package levels, coupons, logging, notifications, etc.}
 
@@ -36,6 +36,4 @@ you may need to follow to accommodate breaking changes:
 https://github.com/andrewculver/koudoku/blob/master/CHANGELOG.md
 
 EOS
-
-
 end
