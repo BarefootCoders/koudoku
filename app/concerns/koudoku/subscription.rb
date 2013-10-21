@@ -83,6 +83,13 @@ module Koudoku::Subscription
                 end
               end
 
+              # If the class we're being included in supports stripe coupons ..
+              if respond_to? :stripe_coupon
+                if stripe_coupon.present?
+                  customer_attributes[:coupon] = stripe_coupon.id_in_stripe
+                end
+              end
+
               # create a customer at that package level.
               customer = Stripe::Customer.create(customer_attributes)
 
