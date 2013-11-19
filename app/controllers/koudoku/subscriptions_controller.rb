@@ -31,14 +31,14 @@ module Koudoku
 
     def redirect_to_sign_up
       session["#{Koudoku.subscriptions_owned_by.to_s}_return_to"] = new_subscription_path(plan: params[:plan])
-      redirect_to new_registration_path(Koudoku.subscriptions_owned_by.to_s)
+      redirect_to new_registration_path(Koudoku.subscriptions_owned_by.to_s, params)
     end
 
     def index
 
       # don't bother showing the index if they've already got a subscription.
       if current_owner and current_owner.subscription.present?
-        redirect_to koudoku.edit_owner_subscription_path(current_owner, current_owner.subscription)
+        redirect_to koudoku.edit_owner_subscription_path(current_owner, current_owner.subscription, params)
       end
 
       # Load all plans.
@@ -78,7 +78,7 @@ module Koudoku
 
     def show_existing_subscription
       if @owner.subscription.present?
-        redirect_to owner_subscription_path(@owner, @owner.subscription)
+        redirect_to owner_subscription_path(@owner, @owner.subscription, params)
       end
     end
 

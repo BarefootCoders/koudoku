@@ -14,7 +14,7 @@ module Koudoku::Subscription
     # update details.
     before_save :processing!
     def processing!
-
+      customer = nil
       # if their package level has changed ..
       if changing_plans?
 
@@ -100,9 +100,9 @@ module Koudoku::Subscription
             end
 
             # store the customer id.
-            if customer.present? and customer.respond_to?(:id) and customer.respond_to?(:active_card)
-              self.stripe_id = customer.id
-              self.last_four = customer.active_card.last4
+            if customer.present?
+              self.stripe_id = customer.try(:id)
+              self.last_four = customer.try(:active_card).try(:last4)
             end
 
             finalize_new_subscription!
