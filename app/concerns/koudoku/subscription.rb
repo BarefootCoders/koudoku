@@ -101,8 +101,8 @@ module Koudoku::Subscription
 
             # store the customer id.
             if customer.present?
-              self.stripe_id = customer.try(:id)
-              self.last_four = customer.try(:active_card).try(:last4)
+              self.stripe_id = customer['id']
+              self.last_four = customer['active_card'].try(:last4)
             end
 
             finalize_new_subscription!
