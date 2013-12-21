@@ -110,7 +110,7 @@ module Koudoku
     def update
       if @subscription.update_attributes(params[:subscription])
         flash[:notice] = "You've successfully updated your subscription."
-        redirect_to cookies[:pre_authentication_url] || owner_subscription_path(@owner, @subscription)
+        redirect_to cookies[:pre_authentication_url] || root_url
       else
         flash[:error] = 'There was a problem processing this transaction.'
         render :edit
