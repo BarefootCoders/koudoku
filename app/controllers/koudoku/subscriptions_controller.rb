@@ -101,7 +101,7 @@ module Koudoku
       flash[:notice] = "Your account will not auto-renew."
       @subscription.plan_id = nil
       @subscription.save
-      redirect_to owner_subscription_path(@owner, @subscription)
+      redirect_to main_app.try(:edit_user_registration_path) || owner_subscription_path(@owner, @subscription)
     end
 
     def edit
