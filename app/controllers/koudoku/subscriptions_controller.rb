@@ -108,13 +108,13 @@ module Koudoku
     end
 
     def update
-      if @subscription.update_attributes(params[:subscription])
-        flash[:notice] = "You've successfully updated your subscription."
-        redirect_to cookies[:pre_authentication_url] || edit_owner_subscription_path(@owner, @subscription)
-      else
-        flash[:error] = 'There was a problem processing this transaction.'
-        render :edit
-      end
+      @subscription.update_attributes!(params[:subscription])
+      flash[:notice] = "You've successfully updated your subscription."
+      redirect_to cookies[:pre_authentication_url] || edit_owner_subscription_path(@owner, @subscription)
+    rescue => ex
+      Honeybadger.notify(ex)
+      flash[:error] = 'There was a problem processing this transaction.'
+      render :edit
     end
 
   end

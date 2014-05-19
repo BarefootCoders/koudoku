@@ -19,6 +19,7 @@ Gem::Specification.new do |s|
   s.add_dependency "rails", ">= 3.2.11"
   s.add_dependency "stripe"
   s.add_dependency "bluecloth"
+  s.add_dependency "honeybadger"
 
   s.add_development_dependency "jquery-rails"
   s.add_development_dependency "sqlite3"
