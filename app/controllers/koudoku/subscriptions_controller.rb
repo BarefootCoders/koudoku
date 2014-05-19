@@ -85,13 +85,13 @@ module Koudoku
     def create
       @subscription = ::Subscription.new(params[:subscription])
       @subscription.user = @owner
-      if @subscription.save
-        flash[:notice] = "You've been successfully upgraded."
-        redirect_to owner_subscription_path(@owner, @subscription)
-      else
-        flash[:error] = 'There was a problem processing this transaction.'
-        render :new
-      end
+      @subscription.save!
+      flash[:notice] = "You've been successfully upgraded."
+      redirect_to owner_subscription_path(@owner, @subscription)
+    rescue => ex
+      Honeybadger.notify(ex)
+      flash[:error] = 'There was a problem processing this transaction.'
+      render :new
     end
 
     def show
@@ -100,7 +100,10 @@ module Koudoku
     def cancel
       flash[:notice] = "Your account will not auto-renew."
       @subscription.plan_id = nil
-      @subscription.save
+      @subscription.save!
+    rescue => ex
+      Honeybadger.notify(ex)
+    ensure
       redirect_to main_app.try(:edit_user_registration_path) || owner_subscription_path(@owner, @subscription)
     end
 
