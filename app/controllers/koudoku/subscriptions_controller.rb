@@ -38,7 +38,11 @@ module Koudoku
 
       # don't bother showing the index if they've already got a subscription.
       if current_owner and current_owner.subscription.present?
-        redirect_to koudoku.edit_owner_subscription_path(current_owner, current_owner.subscription, params)
+        if current_owner.payment_failed?
+          redirect_to '/users/edit'
+        else
+          redirect_to koudoku.edit_owner_subscription_path(current_owner, current_owner.subscription, params)
+        end
       end
 
       # Load all plans.
