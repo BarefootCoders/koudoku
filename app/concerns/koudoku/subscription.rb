@@ -14,6 +14,8 @@ module Koudoku::Subscription
     # update details.
     before_save :processing!
     def processing!
+      return true if $skip_stripe_creation
+
       customer = nil
       # if their package level has changed ..
       if changing_plans?
