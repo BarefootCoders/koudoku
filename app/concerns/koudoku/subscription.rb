@@ -13,6 +13,19 @@ module Koudoku::Subscription
 
     # update details.
     before_save :processing!
+
+    def cancel_plan!(customer = nil)
+      customer = find_customer unless customer.present?
+      prepare_for_cancelation
+      self.current_price = nil
+      customer.cancel_subscription(at_period_end: true)
+      finalize_cancelation!
+    end
+
+    def find_customer
+      Stripe::Customer.retrieve(self.stripe_id)
+    end
+
     def processing!
       return true if $skip_stripe_creation
 
@@ -45,17 +58,7 @@ module Koudoku::Subscription
 
           # if no plan has been selected.
           else
-
-            prepare_for_cancelation
-
-            # Remove the current pricing.
-            self.current_price = nil
-
-            # delete the subscription.
-            customer.cancel_subscription(at_period_end: true)
-
-            finalize_cancelation!
-
+            cancel_plan!(customer)
           end
 
         # otherwise
