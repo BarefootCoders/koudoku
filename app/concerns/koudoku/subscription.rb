@@ -3,7 +3,7 @@ module Koudoku::Subscription
 
   included do
 
-    attr_accessible :plan_id, :stripe_id, :current_price, :credit_card_token, :card_type, :last_four
+    attr_accessible :plan_id, :stripe_id, :current_price, :credit_card_token, :card_type, :last_four, :trial_end
 
     # We don't store these one-time use tokens, but this is what Stripe provides
     # client-side after storing the credit card information.
@@ -78,7 +78,8 @@ module Koudoku::Subscription
               customer_attributes = {
                 description: subscription_owner_description,
                 card: credit_card_token, # obtained with Stripe.js
-                plan: plan.stripe_id
+                plan: plan.stripe_id,
+                trial_end: trial_end.presence
               }
 
               # If the class we're being included in supports coupons ..
