@@ -254,4 +254,8 @@ module Koudoku::Subscription
   def charge_disputed
   end
 
+  def needs_reactivation?
+    stripe_id.nil?
+  end
+
 end

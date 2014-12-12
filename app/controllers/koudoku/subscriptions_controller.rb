@@ -40,6 +40,8 @@ module Koudoku
       if current_owner and current_owner.subscription.present?
         if current_owner.payment_failed?
           redirect_to '/users/edit'
+        elsif current_owner.subscription.needs_reactivation?
+          redirect_to koudoku.edit_owner_subscription_path(current_owner, current_owner.subscription, reactivate: 'true')
         else
           redirect_to koudoku.edit_owner_subscription_path(current_owner, current_owner.subscription, params)
         end
