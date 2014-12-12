@@ -93,7 +93,7 @@ module Koudoku
       flash[:notice] = "You've been successfully upgraded."
       redirect_to owner_subscription_path(@owner, @subscription)
     rescue => ex
-      Honeybadger.notify(ex)
+      Notifier.notify!(ex)
       flash[:error] = 'There was a problem processing this transaction.'
       render :new
     end
@@ -106,7 +106,7 @@ module Koudoku
       @subscription.plan_id = nil
       @subscription.save!
     rescue => ex
-      Honeybadger.notify(ex)
+      Notifier.notify!(ex)
     ensure
       redirect_to main_app.try(:edit_user_registration_path) || owner_subscription_path(@owner, @subscription)
     end
@@ -119,7 +119,7 @@ module Koudoku
       flash[:notice] = "You've successfully updated your subscription."
       redirect_to cookies[:pre_authentication_url] || edit_owner_subscription_path(@owner, @subscription)
     rescue => ex
-      Honeybadger.notify(ex)
+      Notifier.notify!(ex)
       flash[:error] = 'There was a problem processing this transaction.'
       render :edit
     end
